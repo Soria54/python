@@ -2,7 +2,6 @@ from array import array
 from xml.etree.ElementInclude import include
 from flask import Flask
 from flask import render_template
-from MySQLdb import _mysql
 from bs4 import BeautifulSoup
 
 import controllers.hello as hello
@@ -10,12 +9,18 @@ import requests
 import cloudscraper
 import time
 import numpy as np
-
+import mysql.connector
 
 
 app = Flask("projetWebToon")
 
-db=_mysql.connect("127.0.0.1","root",  "root","python")
+mydb = mysql.connector.connect(
+  host="127.0.0.1",
+  user="root",
+  password="root",
+  database="python"
+)
+
 @app.route("/")
 def index():
 
@@ -93,12 +98,35 @@ def index():
     #print (newNewarrayWebToon)
 
     for WebToon in newNewarrayWebToon :
-        db.query('INSERT INTO `python`.`webToon` (`nom`) VALUES ("' + str(WebToon[0]) + '")')
-        print("ici")
-        idWebToon = db.insert_id()
+        #db.query('INSERT INTO `python`.`webToon` (`nom`) VALUES ("' + str(WebToon[0]) + '")')
+        #print("ici")
+        #idWebToon = db.insert_id()
+
+        #for chapitre in WebToon[1]:
+        #    db.query("INSERT INTO `python`.`chapitre` (`numero`, `id_webToon`) VALUES ('" + str(chapitre) + "', '"+ str(idWebToon) +"')")
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute('SELECT * From `python`.`webToon` where nom ="' + str(WebToon[0]) + '"')
+        myresult = mycursor.fetchall()
+
+        if myresult == []:
+            mycursor.execute('INSERT INTO `python`.`webToon` (`nom`) VALUES ("' + str(WebToon[0]) + '")')
+            mydb.commit()
+            idWebToon = mycursor.lastrowid
+        else :
+            id = [item[0] for item in myresult]
+            idWebToon = id[0]
+
         for chapitre in WebToon[1]:
-            db.query("INSERT INTO `python`.`chapitre` (`numero`, `id_webToon`) VALUES ('" + str(chapitre) + "', '"+ str(idWebToon) +"')")
-    
+            mycursor.execute('SELECT * From `python`.`chapitre` where numero ="' + str(chapitre) + '" and Id_webToon ="'+ str(idWebToon) +'"')
+            myresult = mycursor.fetchall()
+            if myresult == []:
+                mycursor.execute("INSERT INTO `python`.`chapitre` (`numero`, `id_webToon`) VALUES ('" + str(chapitre) + "', '"+ str(idWebToon) +"')")
+                mydb.commit()
+
+        #db.query('SELECT * From `python`.`webToon` where nom ="' + str(WebToon[0]) + '"')
+        #print(db.store_result().fetch_row() )
     #print(db.store_result().fetch_row())
 
     return  render_template('home.html', newNewarrayWebToon=newNewarrayWebToon)
