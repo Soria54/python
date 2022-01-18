@@ -2,7 +2,7 @@ from array import array
 from xml.etree.ElementInclude import include
 from flask import Flask
 from flask import render_template
-from flaskext.mysql import MySQL
+from MySQLdb import _mysql
 from bs4 import BeautifulSoup
 
 import controllers.hello as hello
@@ -15,13 +15,7 @@ import numpy as np
 
 app = Flask("projetWebToon")
 
-#mysql = MySQL()
-#app.config['MYSQL_DATABASE_USER'] = 'root'
-#app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
-#app.config['MYSQL_DATABASE_DB'] = 'EmpData'
-#app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-#mysql.init_app(app)
-
+db=_mysql.connect("127.0.0.1","root",  "root","python")
 @app.route("/")
 def index():
 
@@ -56,8 +50,8 @@ def index():
             stop = True
 
     #print(japanread)
-    print(arrayWebToon)
-    print(stop)
+    #print(arrayWebToon)
+    #print(stop)
     #cookie_value, user_agent = cloudscraper.get_cookie_string('https://www.japanread.cc/')
 
     #print('GET / HTTP/1.1\nCookie: {}\nUser-Agent: {}\n'.format(cookie_value, user_agent))  
@@ -87,7 +81,7 @@ def index():
     for WebToon in newArrayWebToon:
         if WebToon[0] not in arrayTitre:
             arrayTitre.append(WebToon[0])
-    print(arrayTitre)
+    #print(arrayTitre)
 
     newNewarrayWebToon = []
     for titre in arrayTitre:
@@ -96,7 +90,16 @@ def index():
             if titre == WebToon[0]:
                 arrayChapitres.append(WebToon[1])
         newNewarrayWebToon.append( [titre, arrayChapitres])
-    print (newNewarrayWebToon)
+    #print (newNewarrayWebToon)
+
+    for WebToon in newNewarrayWebToon :
+        db.query('INSERT INTO `python`.`webToon` (`nom`) VALUES ("' + str(WebToon[0]) + '")')
+        print("ici")
+        idWebToon = db.insert_id()
+        for chapitre in WebToon[1]:
+            db.query("INSERT INTO `python`.`chapitre` (`numero`, `id_webToon`) VALUES ('" + str(chapitre) + "', '"+ str(idWebToon) +"')")
+    
+    #print(db.store_result().fetch_row())
 
     return  render_template('home.html', newNewarrayWebToon=newNewarrayWebToon)
 
