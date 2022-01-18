@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class='flex flex-col h-full  '>
+    <h1 class="mb-4 font-semibold">Liste des WebToon sortie sur JapanRead</h1>
+
+    {% for WebToon in newNewarrayWebToon %}
+        {% if loop.index % 2 == 1 %}
+        <div class="flex p-2 bg-gray-200">
+            {% else %}
+        <div class="flex p-2">
+        {% endif %}
+    
+        
+            <div class="w-1/2">{{WebToon[0]}}</div>
+            <div class="flex flex-col w-1/2">
+                <span>Chapitre disponible</span>
+                {% for numChapitre in WebToon[1] %}
+                    <p class="flex ml-2">
+                        <span>{{numChapitre}} <a href="https://www.japanread.cc/manga/{{WebToon[0]| replace(" ", "-")}}/{{numChapitre}}" class="cursor-pointer text-blue-400"> lire </a></span>  
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+    
+    
+
+
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>ProjectWebToon</title>
+       <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <style>
+        .navbar {
+            position: relative;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            padding: .5rem 1rem;
+        }
+        .bg-gray-menergies
+        {
+            background: #f0f0f0; 
+        }
+        .green-menergies
+        {
+            color: #a5ce61;
+        }
+
+        .bg-red-menergies
+        {
+            background: #d65959;
+        }
+        .hover-red-menergies:hover
+        {
+            background: #ce3a3a;
+        }
+        
+        .bg-green-menergies
+        {
+            background: #a5ce61;
+        }
+        .hover-green-menergies2:hover
+        {
+            background: #94c544;
+        } 
+        .border-green-menergies
+        {
+            border-color: #94c544;
+        } 
+        .hover-green-menergies:hover
+        {
+            background: #f5f9ed;
+        }
+    </style>
+    <body>
+        <div class='flex flex-col h-96 min-h-screen'>
+            <nav class="navbar sticky-top navbar-light  bg-gray-800">
+                <h1 class="text-white text-xl m-2">
+                    <span >Python project</span><span class="text-green-400 font-bold mx-2">|</span><span class="text-base" >ProjectWebToon</span>
+                </h1>
+            </nav>
+            <div class=' flex'>
+                <div id='menu' class='w-60 bg-gray-200'>
+                    <div class='flex flex-col'>
+
+
+                        <a href="/"><div id='home' class='cursor-pointer hover:text-green-600 hover:bg-green-600 hover:bg-opacity-5 font-semibold text-sm px-4 py-3 flex
+                            transition duration-300 border-l-4 border-transparent hover:border-green-600 '>
+                            <span  class="text-xl text-gray-400"><i class=" pr-3 fa fa-home"></i></span> 
+                            <span class="my-auto">Home</span> 
+                           
+                        </div></a>
+
+
+                    </div>
+                </div>
+                <div id='Continuer' class='w-full py-10 px-20'>
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+            
+        </div>
+    </body>
+    <script>
+        nav_click('home')
+        function nav_click(id)
+        {
+            var nav_elment = document.getElementById(id);
+            nav_elment.classList.add("border-green-600");
+            nav_elment.classList.add("text-green-600");
+            nav_elment.classList.add("bg-green-600");
+            nav_elment.classList.add("bg-opacity-5");
+            
+        }
+        
+    </script>
+</html>
